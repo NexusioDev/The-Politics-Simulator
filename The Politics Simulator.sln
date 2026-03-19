@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "The Politics Simulator", "The Politics Simulator.vcxproj", "{B1A3AE84-3A8A-46B8-BC59-070A5352B882}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B1A3AE84-3A8A-46B8-BC59-070A5352B882}.Debug|x64.ActiveCfg = Debug|x64
+		{B1A3AE84-3A8A-46B8-BC59-070A5352B882}.Debug|x64.Build.0 = Debug|x64
+		{B1A3AE84-3A8A-46B8-BC59-070A5352B882}.Debug|x86.ActiveCfg = Debug|Win32
+		{B1A3AE84-3A8A-46B8-BC59-070A5352B882}.Debug|x86.Build.0 = Debug|Win32
+		{B1A3AE84-3A8A-46B8-BC59-070A5352B882}.Release|x64.ActiveCfg = Release|x64
+		{B1A3AE84-3A8A-46B8-BC59-070A5352B882}.Release|x64.Build.0 = Release|x64
+		{B1A3AE84-3A8A-46B8-BC59-070A5352B882}.Release|x86.ActiveCfg = Release|Win32
+		{B1A3AE84-3A8A-46B8-BC59-070A5352B882}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E84FE556-A985-42EC-BC63-368A7D32E644}
+	EndGlobalSection
+EndGlobal
