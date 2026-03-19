@@ -49,6 +49,16 @@ struct GameState {
     int trashRecycling = 1;
     int64_t totalServicesCosts = 0;
 
+    // Education
+    int elementarySchools = 1;
+    int highSchools = 1;
+    int universities = 1;
+
+    // Military
+    int solders = 1;
+    int militaryStations = 1;
+    int wars = 0;
+
     GameState();
     void CreateDefaultGame();
     
@@ -76,6 +86,8 @@ struct GameState {
     [[nodiscard]] int64_t publicTransportMaintenance() const;
     [[nodiscard]] int64_t stateHighwayCosts() const;
     [[nodiscard]] int64_t stateServicesCosts() const;
+    [[nodiscard]] int64_t stateEducationCosts() const;
+    [[nodiscard]] int64_t stateMilitaryCosts() const;
     
     int64_t GetNetIncome();
     void UpdateTraffic();

@@ -98,7 +98,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) { //TODO: Das Game muss für jede auflösung geiegnet sein
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) { //TODO: Das Game muss für jede auflösung geeignet sein
     WNDCLASS wc = {};
     SetProcessDPIAware();
     wc.lpfnWndProc = WindowProc;
@@ -120,7 +120,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) { //TODO: Das Gam
 
     glMatrixMode(GL_PROJECTION); glLoadIdentity();
     glOrtho(0, bitmapWidth, bitmapHeight, 0, -1, 1);
-    projection = glm::ortho(0.0f, (float)bitmapWidth, (float)bitmapHeight, 0.0f, -1.0f, 1.0f);
+    projection = glm::ortho(0.0f, static_cast<float>(bitmapWidth), static_cast<float>(bitmapHeight), 0.0f, -1.0f, 1.0f);
     glMatrixMode(GL_MODELVIEW); glLoadIdentity();
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
@@ -167,8 +167,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) { //TODO: Das Gam
     auto* mainMenuUI = CreateUIElement<Panel>(0, 0, 0, 0, 0.2f, 0.2f, 0.25f);
     auto* gameUI = CreateUIElement<Panel>(0, 0, 0, 0, 0.2f, 0.2f, 0.25f);
 
-    auto* leftBar = gameUI->CreateChild<Panel>(0, 0, 250, bitmapHeight, 0.15f, 0.15f, 0.18f);
-    auto* topBar = gameUI->CreateChild<Panel>(250, 0, bitmapWidth - 250, 50, 0.1f, 0.1f, 0.12f);
+    auto* leftBar = gameUI->CreateChild<Panel>(0, 0, 240, bitmapHeight, 0.15f, 0.15f, 0.18f);
+    auto* topBar = gameUI->CreateChild<Panel>(240, 0, bitmapWidth - 240, 50, 0.1f, 0.1f, 0.12f);
 
     auto* taxesMenu = gameUI->CreateChild<Panel>(260, 60, 300, 400, 0.2f, 0.2f, 0.25f);
     auto* infrastructureMenu = gameUI->CreateChild<Panel>(260, 60, 300, 500, 0.2f, 0.2f, 0.25f);
@@ -186,30 +186,28 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) { //TODO: Das Gam
     auto* educationInfoMenu = educationPolicyMenu->CreateChild<Panel>(310, 0, 200, 400, 0.2f, 0.2f, 0.25f);
     auto* militaryInfoMenu = militaryPolicyMenu->CreateChild<Panel>(310, 0, 200, 400, 0.2f, 0.2f, 0.25f);
     //TODO: LeftBar auch übersichtlicher gestalten
-    leftBar->CreateChild<Label>(20, 20, 250, []() { return "FPS:" + std::to_string(static_cast<int>(fps)); });
-    auto* mainMoneyLabel = leftBar->CreateChild<Label>(20, 40, 250, []() { return "Money: " + formatValue(state.money, "EUR"); });
-    leftBar->CreateChild<Label>(20, 60, 250, []() { return "Government Trust: " + std::to_string(static_cast<int>(state.stability)); });
-    leftBar->CreateChild<Label>(20, 80, 250, []() { return "Population: " + formatValue(state.population()); });
+    leftBar->CreateChild<Label>(20, 10, 250, []() { return "FPS:" + std::to_string(static_cast<int>(fps)); });
+    auto* mainMoneyLabel = leftBar->CreateChild<Label>(20, 30, 250, []() { return "Money: " + formatValue(state.money, "EUR"); });
+    leftBar->CreateChild<Label>(20, 50, 250, []() { return "Government Trust: " + std::to_string(static_cast<int>(state.stability)); });
+    leftBar->CreateChild<Label>(20, 70, 250, []() { return "Population: " + formatValue(state.population()); });
 
-    leftBar->CreateChild<Label>(20, 480, 250, []() { return "City Transit: " + formatValue(state.cityTransitUsage); });
-    leftBar->CreateChild<Label>(20, 500, 250, []() { return "Intercity: " + formatValue(state.intercityUsage); });
-    leftBar->CreateChild<Label>(20, 520, 250, []() { return "National Users: " + formatValue(state.nationalTicketUsers); });
-    
-    leftBar->CreateChild<Label>(20, 540, 200, []() {
+    leftBar->CreateChild<Label>(20, 440, 200, []() { return "Sim-Logic: " + std::to_string(lastSimTimeUs) + " us"; }, 0);
+    leftBar->CreateChild<Label>(20, 460, 250, []() { return "City Transit: " + formatValue(state.cityTransitUsage); });
+    leftBar->CreateChild<Label>(20, 480, 250, []() { return "Intercity: " + formatValue(state.intercityUsage); });
+    leftBar->CreateChild<Label>(20, 500, 250, []() { return "National Users: " + formatValue(state.nationalTicketUsers); });
+
+    leftBar->CreateChild<Label>(20, 530, 200, []() {
         const char* days[] = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
         const int dayIndex = state.currentDay % 7;
         return std::string("Day: ") + days[dayIndex] + " (Total: " + std::to_string(state.currentDay) + ")";
     }, 1);
 
-    auto* speedPanel = topBar->CreateChild<Panel>(10, 5, 110, 40, 0.2f, 0.2f, 0.2f);
+    auto* speedPanel = topBar->CreateChild<Panel>(5, 5, 110, 40, 0.2f, 0.2f, 0.2f);
 
     speedPanel->CreateChild<Button>(5, 5, 30, 30, "||")->onClick = []() { simSpeed = 0.0f; };
     speedPanel->CreateChild<Button>(40, 5, 30, 30, ">")->onClick = []() { simSpeed = 1.0f; };
     speedPanel->CreateChild<Button>(75, 5, 30, 30, ">>")->onClick = []() { simSpeed = 4.0f; };
 
-    leftBar->CreateChild<Label>(20, 460, 200, []() {
-        return "Sim-Logic: " + std::to_string(lastSimTimeUs) + " us";
-    }, 0);
 
     auto* topBarNotificationLabel = topBar->CreateChild<Label>(5, 15, bitmapWidth - 250, []() {
         std::vector<const char*> warnings;
@@ -285,11 +283,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) { //TODO: Das Gam
         return (net >= 0 ? "+" : "") + formatValue(net, "EUR");
     }, 0, true);
     auto* educationIncomeLabel = taxesInfoMenu->CreateChild<Label>(0, 275, 200, []() {
-        const int64_t net = state.GetNetIncome();
+        const int64_t net = -state.stateEducationCosts();
         return (net >= 0 ? "+" : "") + formatValue(net, "EUR");
     }, 0, true);
     auto* militaryIncomeLabel = taxesInfoMenu->CreateChild<Label>(0, 300, 200, []() {
-        const int64_t net = state.GetNetIncome();
+        const int64_t net = -state.stateMilitaryCosts();
         return (net >= 0 ? "+" : "") + formatValue(net, "EUR");
     }, 0, true);
 
@@ -533,15 +531,61 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int) { //TODO: Das Gam
         state.stability += 3;
     };
 
-    // Education PANEL //TODO: Education Funktionen
+    // Education PANEL
     educationInfoMenu->CreateChild<Label>(0, 20, 200, []() {
-        return "Elementary Schools: " + formatValue(state.fireHouses);
+        return "Elementary Schools: " + formatValue(state.elementarySchools);
         }, 0, true);
-    
-    // Military PANEL //TODO: Military Funktionen
+    educationInfoMenu->CreateChild<Label>(0, 40, 200, []() {
+        return "High Schools: " + formatValue(state.highSchools);
+        }, 0, true);
+    educationInfoMenu->CreateChild<Label>(0, 60, 200, []() {
+        return "Universities: " + formatValue(state.universities);
+        }, 0, true);
+    educationInfoMenu->CreateChild<Line>(0, 105, 200, 2);
+    auto* educationInfoIncomeLabel = educationInfoMenu->CreateChild<Label>(0, 125, 200, []() {
+        const int64_t net = -state.stateEducationCosts();
+        return (net >= 0 ? "+" : "") + formatValue(net, "EUR");
+        }, 0, true);
+
+    educationInfoIncomeLabel->colorSource = []() -> glm::vec3 {
+        return (-state.stateEducationCosts() >= 0) ? UIColors::Positive : UIColors::Negative;
+    };
+
+    educationPolicyMenu->CreateChild<Button>(10, 20, 260, 40, "Build a new Elementary School")->onClick = []() {
+        state.money -= 10000000;
+        state.elementarySchools += 1;
+        state.stability += 2;
+    };
+    educationPolicyMenu->CreateChild<Button>(10, 60, 260, 40, "Build a new High School")->onClick = []() {
+        state.money -= 10000000;
+        state.highSchools += 1;
+        state.stability += 3;
+    };
+    educationPolicyMenu->CreateChild<Button>(10, 100, 260, 40, "Build a new University")->onClick = []() {
+        state.money -= 100000000;
+        state.universities += 1;
+        state.stability += 5;
+    };
+
+    // Military PANEL
     militaryInfoMenu->CreateChild<Label>(0, 20, 200, []() {
-        return "Military Stations: " + formatValue(state.fireHouses);
+        return "Solders: " + formatValue(state.solders);
         }, 0, true);
+    militaryInfoMenu->CreateChild<Label>(0, 40, 200, []() {
+        return "Military Bases: " + formatValue(state.militaryStations);
+        }, 0, true);
+    militaryInfoMenu->CreateChild<Label>(0, 60, 200, []() {
+        return "Wars: " + formatValue(state.wars);
+        }, 0, true);
+    militaryInfoMenu->CreateChild<Line>(0, 105, 200, 2);
+    auto* militaryInfoIncomeLabel = militaryInfoMenu->CreateChild<Label>(0, 125, 200, []() {
+        const int64_t net = -state.stateMilitaryCosts();
+        return (net >= 0 ? "+" : "") + formatValue(net, "EUR");
+        }, 0, true);
+
+    militaryInfoIncomeLabel->colorSource = []() -> glm::vec3 {
+        return (-state.stateMilitaryCosts() >= 0) ? UIColors::Positive : UIColors::Negative;
+    };
 
     // Initial visibility
     gameUI->visible = false;

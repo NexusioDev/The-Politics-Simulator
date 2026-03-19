@@ -43,6 +43,9 @@ GameState GameState::CreateSmallVillage() {
     gs.fireHouses = 1;
     gs.policeStations = 1;
     gs.trashRecycling = 1;
+    gs.elementarySchools = 1;
+    gs.highSchools = 1;
+    gs.universities = 0;
     return gs;
 }
 
@@ -236,15 +239,42 @@ int64_t GameState::stateServicesCosts() const {
     return costs;
 }
 
+int64_t GameState::stateEducationCosts() const {
+    int64_t costs = 0;
+    if (elementarySchools != 0) costs += elementarySchools * 200000LL;
+    else costs += population() * 5;
+
+    if (highSchools != 0) costs += highSchools * 2000000LL;
+    else costs += population() * 10;
+
+    if (universities != 0) costs += universities * 20000000LL;
+    else costs += population() * 15;
+
+    return costs;
+}
+
+int64_t GameState::stateMilitaryCosts() const {
+    int64_t costs = 0;
+    if (solders != 0) costs += solders * 10LL;
+    else costs += population() * 5;
+
+    if (militaryStations != 0) costs += militaryStations * 2000000LL;
+    else costs += population() * 5;
+
+    return costs;
+}
+
 int64_t GameState::GetNetIncome() {
     int64_t totalTax = (popGrownUps() * 2000LL * residentTax) / 100LL;
     int64_t upkeepBase = (population() * 15LL) / 100LL;
     int64_t healthCosts = stateHealthcareCosts();
     int64_t infraHighway = stateHighwayCosts();
+    int64_t educationCosts = stateEducationCosts();
+    int64_t militaryCosts = stateMilitaryCosts();
     totalServicesCosts = stateServicesCosts();
     int64_t transitNet = getTransitBalance();
 
-    int64_t net = totalTax - upkeepBase - healthCosts - infraHighway - totalServicesCosts + transitNet;
+    int64_t net = totalTax - upkeepBase - healthCosts - infraHighway - totalServicesCosts - educationCosts - militaryCosts + transitNet;
 
     if (money < 0) net += (money * 2LL) / 100LL;
 
@@ -305,6 +335,8 @@ void GameState::UpdateSimulation() {
     popChildren = std::max<int64_t>(0, popChildren);
     popAdults = std::max<int64_t>(0, popAdults);
     popSeniors = std::max<int64_t>(0, popSeniors);
+
+    solders = popAdults * 0.01f;
 
     money += GetNetIncome();
 
